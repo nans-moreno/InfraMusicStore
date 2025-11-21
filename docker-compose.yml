@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mariadb:11
+    container_name: btp_db
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpwd
+      MARIADB_DATABASE: chinook
+      MARIADB_USER: chinook
+      MARIADB_PASSWORD: chinookpwd
+    ports:
+      - "13306:3306"   # <-- change ici (3306 dans le conteneur reste inchangé)
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/Chinook_MySql_AutoIncrementPKs.sql:/docker-entrypoint-initdb.d/00-init.sql
+      - ./database/test_data.sql:/docker-entrypoint-initdb.d/10-test-data.sql
+
+  api:
+    build: ./api
+    container_name: btp_api
+    env_file: .env
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+
+  adminer:
+    image: adminer
+    container_name: btp_adminer
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  db_data:
+

@@ -1,0 +1,53 @@
+openapi: 3.0.3
+info:
+  title: InfraMusicStore API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3000
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+  /api/artists:
+    get:
+      summary: List artists
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create artist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [Name]
+              properties:
+                Name: { type: string }
+      responses:
+        '201': { description: Created }
+  /api/artists/{id}:
+    get:
+      summary: Get artist by id
+      parameters: [{ in: path, name: id, required: true, schema: { type: integer } }]
+      responses: { '200': { description: OK }, '404': { description: Not found } }
+    put:
+      summary: Update artist
+      parameters: [{ in: path, name: id, required: true, schema: { type: integer } }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [Name]
+              properties:
+                Name: { type: string }
+      responses: { '200': { description: OK } }
+    delete:
+      summary: Delete artist
+      parameters: [{ in: path, name: id, required: true, schema: { type: integer } }]
+      responses: { '204': { description: No Content } }
